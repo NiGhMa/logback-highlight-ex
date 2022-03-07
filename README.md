@@ -10,43 +10,48 @@ Here is a converter allowing you to customize the color scheme. What you need to
 1. Use your conversion word (`highlightex` in the example) in `<pattern>`
 
 ```Java
-package com.acme.logback;
+package code.nighma.logging.utils;
 
-public class HighlightingCompositeConverterEx extends ForegroundCompositeConverterBase<ILoggingEvent> {
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.pattern.color.ANSIConstants;
+import ch.qos.logback.core.pattern.color.ForegroundCompositeConverterBase;
 
-    @Override
-    protected String getForegroundColorCode(ILoggingEvent event) {
-        Level level = event.getLevel();
-        switch (level.toInt()) {
-        case Level.ERROR_INT:
-            return ANSIConstants.BOLD + ANSIConstants.RED_FG; // same as default color scheme
-        case Level.WARN_INT:
-            return ANSIConstants.RED_FG;// same as default color scheme
-        case Level.INFO_INT:
-            return ANSIConstants.CYAN_FG; // use CYAN instead of BLUE
-        default:
-            return ANSIConstants.DEFAULT_FG;
-        }
-    }
+public class LogbackHighlightCompositeConverterEx extends ForegroundCompositeConverterBase<ILoggingEvent> {
 
+  @Override
+  protected String getForegroundColorCode(ILoggingEvent event) {
+    Level level = event.getLevel();
+    return switch (level.toInt()) {
+      case Level.ERROR_INT -> ANSIConstants.BOLD + ANSIConstants.RED_FG;
+      case Level.WARN_INT -> ANSIConstants.BOLD + ANSIConstants.MAGENTA_FG;
+      case Level.INFO_INT -> ANSIConstants.BOLD + ANSIConstants.CYAN_FG;
+      case Level.DEBUG_INT -> ANSIConstants.BOLD + ANSIConstants.YELLOW_FG;
+      case Level.TRACE_INT -> ANSIConstants.BOLD + ANSIConstants.WHITE_FG;
+      default -> ANSIConstants.BOLD + ANSIConstants.DEFAULT_FG;
+    };
+  }
 }
 ```
 
 ```XML
-<!-- logback.xml -->
 <configuration>
-    <!-- custom coloring conversion -->
-    <conversionRule conversionWord="highlightex" converterClass="com.acme.logback.HighlightingCompositeConverterEx" />
 
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <withJansi>true</withJansi>
-        <encoder>
-            <pattern>[%thread] %highlightex(%-5level) %logger{15} - %highlightex(%msg) %n</pattern>
-        </encoder>
-    </appender>
+  <conversionRule conversionWord="highlightex" converterClass="code.nighma.logging.utils.HighlightingCompositeConverterEx"/>
 
-    <root level="DEBUG">
-        <appender-ref ref="STDOUT" />
-    </root>
+  <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+    <layout class="ch.qos.logback.classic.PatternLayout">
+      <Pattern>%green(%d{ISO8601}) [%blue(%t)] %highlightex(%-5level) %yellow(%C{5}): %msg%n%throwable</Pattern>
+    </layout>
+  </appender>
+
+  <root level="info">
+    <appender-ref ref="Console"/>
+  </root>
+
+  <logger name="code.nighma" level="trace" additivity="false">
+    <appender-ref ref="Console"/>
+  </logger>
+
 </configuration>
 ```

@@ -1,0 +1,20 @@
+<configuration>
+
+  <conversionRule conversionWord="highlightex"
+                  converterClass="code.nighma.logging.utils.HighlightingCompositeConverterEx"/>
+
+  <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+    <layout class="ch.qos.logback.classic.PatternLayout">
+      <Pattern>%green(%d{ISO8601}) [%blue(%t)] %highlightex(%-5level) %yellow(%C{5}): %msg%n%throwable</Pattern>
+    </layout>
+  </appender>
+
+  <root level="info">
+    <appender-ref ref="Console"/>
+  </root>
+
+  <logger name="code.nighma" level="trace" additivity="false">
+    <appender-ref ref="Console"/>
+  </logger>
+
+</configuration>

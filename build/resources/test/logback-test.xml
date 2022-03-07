@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <conversionRule conversionWord="highlightex"
+                  converterClass="code.nighma.logging.utils.HighlightingCompositeConverterEx"/>
+
+  <property name="LOGS" value="./logs"/>
+
+  <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+    <layout class="ch.qos.logback.classic.PatternLayout">
+      <Pattern>%green(%d{ISO8601}) %highlightex(%-5level) [%blue(%-10t)] %cyan(%C{5}): %msg%n%throwable</Pattern>
+    </layout>
+  </appender>
+
+  <appender name="RollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOGS}/application.log</file>
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <Pattern>%d{ISO8601} %-5level [%t] %C{5} %m%n%throwable</Pattern>
+    </encoder>
+
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${LOGS}/archived/spring-boot-logger-%d{yyyy-MM-dd}.%i.log
+      </fileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <maxFileSize>10MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+    </rollingPolicy>
+  </appender>
+
+  <root level="info">
+    <appender-ref ref="RollingFile"/>
+    <appender-ref ref="Console"/>
+  </root>
+
+  <logger name="code.nighma" level="trace" additivity="false">
+    <appender-ref ref="RollingFile"/>
+    <appender-ref ref="Console"/>
+  </logger>
+</configuration>

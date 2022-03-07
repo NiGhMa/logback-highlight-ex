@@ -1,0 +1,5 @@
+2022-03-06 19:26:28,795 ERROR [Test worker] c.n.l.u.LogbackHighlightCompositeConverterExTest Error
+2022-03-06 19:26:28,797 WARN  [Test worker] c.n.l.u.LogbackHighlightCompositeConverterExTest Warning
+2022-03-06 19:26:28,799 INFO  [Test worker] c.n.l.u.LogbackHighlightCompositeConverterExTest Info
+2022-03-06 19:26:28,799 DEBUG [Test worker] c.n.l.u.LogbackHighlightCompositeConverterExTest Debug
+2022-03-06 19:26:28,799 TRACE [Test worker] c.n.l.u.LogbackHighlightCompositeConverterExTest Trace
